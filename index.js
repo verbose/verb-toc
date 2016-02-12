@@ -37,7 +37,7 @@ function injectToc(app) {
       tocString += opts.toc.footer || '';
     }
 
-    str = str.split('<!-- toc -->').join(tocString);
+    str = str.replace(/(?!`)<!-- toc -->(?!`)/g, tocString);
     str = str.replace(/\n{2,}/g, '\n\n');
     file.contents = new Buffer(str);
     next(null, file);
