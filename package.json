@@ -17,20 +17,49 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "docs": "verb"
+  },
+  "dependencies": {
+    "extend-shallow": "^2.0.1",
+    "markdown-toc": "^0.12.3"
   },
   "devDependencies": {
     "gulp-format-md": "*",
     "mocha": "*"
   },
   "keywords": [
+    "contents",
+    "docs",
+    "markdown",
+    "middleware",
+    "plugin",
+    "readme",
+    "table",
+    "toc",
     "verb",
-    "toc"
+    "verb-middleware",
+    "verb-plugin",
+    "verbmiddleware",
+    "verbplugin"
   ],
   "verb": {
-    "layout": "default",
+    "related": {
+      "list": [
+        "markdown-toc",
+        "verb"
+      ]
+    },
+    "layout": "global",
+    "tasks": [
+      "readme"
+    ],
     "plugins": [
       "gulp-format-md"
+    ],
+    "reflinks": [
+      "markdown-toc",
+      "verb"
     ]
   }
 }
