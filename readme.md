@@ -20,9 +20,22 @@ This only works with Verb v0.9.0 and higher! (also works with [assemble][]).
 var toc = require('verb-toc');
 ```
 
-**How it works**
+**Basic example**
 
-Simply add a `<!-- toc -->` HTML comment to any markdown document
+In your `verbfile.js`:
+
+```js
+module.exports = function(verb) {
+  verb.extendWith(require('verb-toc'));
+  // do stuff, render templates, write files
+};
+```
+
+Add a `<!-- toc -->` HTML comment to any markdown document where you want a table of contents to be injected. For the TOC middleware to run, you'll need to either call the `postLayout` and `preWrite` middleware handlers yourself, or follow the example below.
+
+***
+
+## Docs
 
 **Middleware**
 
@@ -35,7 +48,7 @@ Both middleware functions are also exposed as properties on `module.exports`, so
 
 **Register the middleware**
 
-In your (v0.9.0 and higher) `verbfile.js`:
+In your `verbfile.js`:
 
 ```js
 module.exports = function(verb) {
