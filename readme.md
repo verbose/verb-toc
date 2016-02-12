@@ -12,7 +12,7 @@ $ npm i -g verb-toc
 
 **HEADS UP!!!**
 
-This only works with Verb v0.9.0 and higher!
+This only works with Verb v0.9.0 and higher! (also works with [assemble][]).
 
 ## Usage
 
@@ -22,7 +22,7 @@ var toc = require('verb-toc');
 
 **How it works**
 
-Simply add a `<!!-- toc -->` HTML comment to any markdown document
+Simply add a `<!-- toc -->` HTML comment to any markdown document
 
 **Middleware**
 
@@ -69,6 +69,12 @@ Generate readme and API documentation with [verb](https://github.com/verbose/ver
 
 ```sh
 $ npm i -d && npm run docs
+```
+
+Or, if [verb](https://github.com/verbose/verb) is installed globally:
+
+```sh
+$ verb
 ```
 
 ## Running tests
