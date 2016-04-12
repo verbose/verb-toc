@@ -60,9 +60,9 @@
       ]
     },
     "reflinks": [
+      "assemble",
       "markdown-toc",
-      "verb",
-      "assemble"
+      "verb"
     ],
     "lint": {
       "reflinks": true
