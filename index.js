@@ -19,10 +19,13 @@ module.exports = function(app) {
 function createToc(method, app) {
   return function(file, next) {
     var opts = extend({toc: {}}, app.options, file.options);
+    if (typeof opts.toc === 'boolean') {
+      opts.toc = { render: opts.toc };
+    }
 
     if (typeof opts.toc.method === 'string') {
       opts.toc.render = true;
-    } else {
+    } else if (opts.toc && typeof opts.toc === 'object') {
       opts.toc.method = 'postLayout';
     }
 
@@ -41,6 +44,12 @@ function createToc(method, app) {
     }
 
     file.toc = toc(file.content, opts);
+
+    if (app.hasListeners('toc')) {
+      app.emit('toc', file, next);
+      return;
+    }
+
     next(null, file);
   };
 };
@@ -49,7 +58,6 @@ function injectToc(app) {
   return function(file, next) {
     var opts = extend({toc: {}}, app.options, file.options);
     var str = file.contents.toString();
-
     var tocString = (file.toc && file.toc.content) || '';
     var min = opts.toc.minLevels;
 
