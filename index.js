@@ -18,24 +18,11 @@ module.exports = function(app) {
 
 function createToc(method, app) {
   return function(file, next) {
-    var opts = extend({toc: {}}, app.options, file.options);
-    if (typeof opts.toc === 'boolean') {
-      opts.toc = { render: opts.toc };
-    }
-
-    if (typeof opts.toc.method === 'string') {
-      opts.toc.render = true;
-    } else if (opts.toc && typeof opts.toc === 'object') {
-      opts.toc.method = 'postLayout';
-    }
+    var opts = createOpts(app, file);
 
     if (method !== opts.toc.method) {
       next(null, file);
       return;
-    }
-
-    if (opts.toc.match || typeof opts.toc.minLevels === 'number') {
-      opts.toc.render = true;
     }
 
     if (opts.toc.render !== true) {
@@ -44,7 +31,6 @@ function createToc(method, app) {
     }
 
     file.toc = toc(file.content, opts);
-
     if (app.hasListeners('toc')) {
       app.emit('toc', file, next);
       return;
@@ -56,7 +42,7 @@ function createToc(method, app) {
 
 function injectToc(app) {
   return function(file, next) {
-    var opts = extend({toc: {}}, app.options, file.options);
+    var opts = createOpts(app, file);
     var str = file.contents.toString();
     var tocString = (file.toc && file.toc.content) || '';
     var min = opts.toc.minLevels;
@@ -78,6 +64,20 @@ function injectToc(app) {
     file.contents = new Buffer(str);
     next(null, file);
   };
+}
+
+function createOpts(app, file) {
+  var opts = extend({toc: {}}, app.options, file.options);
+  if (typeof opts.toc === 'boolean') {
+    opts.toc = { render: opts.toc };
+  }
+  if (typeof opts.toc.method === 'string' || opts.toc.match || typeof opts.toc.minLevels === 'number') {
+    opts.toc.render = true;
+  }
+  if (opts.toc && typeof opts.toc === 'object' && typeof opts.toc.method !== 'string') {
+    opts.toc.method = 'postLayout';
+  }
+  return opts;
 }
 
 function hasMinimumLevels(str, min) {

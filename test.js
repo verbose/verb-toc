@@ -4,15 +4,15 @@ require('mocha');
 var assert = require('assert');
 var Base = require('templates');
 var toc = require('./');
-var base;
+var app;
 
 describe('verb-toc', function() {
   beforeEach(function() {
-    base = new Base();
-    base.use(toc);
-    base.create('pages');
-    base.create('layouts', {viewType: 'layout'});
-    base.engine('.md', function(str, locals, cb) {
+    app = new Base();
+    app.use(toc);
+    app.create('pages');
+    app.create('layouts', {viewType: 'layout'});
+    app.engine('.md', function(str, locals, cb) {
       cb(null, str);
     });
   });
@@ -25,12 +25,15 @@ describe('verb-toc', function() {
 
   describe('middleware', function() {
     it('should emit `toc`', function(cb) {
-      base.options.toc = { render: true };
+      app.options.toc = { render: true };
 
-      base.on('toc', toc.injectToc(base));
+      app.on('toc', toc.injectToc(app));
 
-      base.layout('default', {content: 'foo {% body %} bar'});
-      base.page('note.md', {content: '\n<!-- toc -->\n\n## Foo\n This is foo.\n\n## Bar\n\nThis is bar.', layout: 'default'})
+      app.layout('default', {content: 'abc {% body %} xyz'});
+      app.page('note.md', {
+        content: '\n<!-- toc -->\n\n## Foo\n This is foo.\n\n## Bar\n\nThis is bar.',
+        layout: 'default'
+      })
         .render(function(err, res) {
           if (err) return cb(err);
           assert(res.content.indexOf('- [Foo](#foo)\n- [Bar](#bar)') !== -1);
