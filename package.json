@@ -1,7 +1,7 @@
 {
   "name": "verb-toc",
   "description": "Verb generator that adds middleware for creating and injecting a table of contents into a markdown document.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "https://github.com/verbose/verb-toc",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "verbose/verb-toc",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "extend-shallow": "^2.0.1",
-    "markdown-toc": "^0.12.3"
+    "markdown-toc": "^0.12.6"
   },
   "devDependencies": {
     "gulp-format-md": "^0.1.7",
