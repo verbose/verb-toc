@@ -12,9 +12,7 @@ describe('verb-toc', function() {
     app.use(toc);
     app.create('pages');
     app.create('layouts', {viewType: 'layout'});
-    app.engine('.md', function(str, locals, cb) {
-      cb(null, str);
-    });
+    app.engine('.md', require('engine-base'));
   });
 
   describe('module', function() {
@@ -39,6 +37,47 @@ describe('verb-toc', function() {
           assert(res.content.indexOf('- [Foo](#foo)\n- [Bar](#bar)') !== -1);
           cb();
         });
+    });
+  });
+
+  describe('headings', function() {
+    it('should render templates in headings', function(cb) {
+      app.options.toc = true;
+      app.postRender(/./, toc.injectToc(app));
+      app.data({name: 'Test'});
+
+      app.layout('default', {content: 'abc {% body %} xyz'});
+      var page = app.page('note.md', {
+        content: '\n<!-- toc -->\n\n## <%= name %>\n This is foo.\n\n## Bar\n\nThis is bar.',
+        layout: 'default'
+      });
+
+      app.render(page, function(err, res) {
+        if (err) return cb(err);
+        assert.equal(res.content, 'abc \n- [Test](#test)\n- [Bar](#bar)\n\n## Test\n This is foo.\n\n## Bar\n\nThis is bar. xyz');
+        cb();
+      });
+    });
+
+    it('should render templates in headings with a helper', function(cb) {
+      app.helper('upper', function(str) {
+        return str.toUpperCase();
+      });
+      app.options.toc = true;
+      app.postRender(/./, toc.injectToc(app));
+      app.data({name: 'Test'});
+
+      app.layout('default', {content: 'abc {% body %} xyz'});
+      var page = app.page('note.md', {
+        content: '\n<!-- toc -->\n\n## <%= upper(name) %>\n This is foo.\n\n## Bar\n\nThis is bar.',
+        layout: 'default'
+      });
+
+      app.render(page, function(err, res) {
+        if (err) return cb(err);
+        assert.equal(res.content, 'abc \n- [TEST](#test)\n- [Bar](#bar)\n\n## TEST\n This is foo.\n\n## Bar\n\nThis is bar. xyz');
+        cb();
+      });
     });
   });
 });

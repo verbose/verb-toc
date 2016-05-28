@@ -30,6 +30,16 @@ function createToc(method, app) {
       return;
     }
 
+    opts.linkify = function(token, name, slug, tocOpts) {
+      if (/^[{<]%?/.test(name)) {
+        var view = app.view('toctemp' + file.extname, {content: name});
+        app.compile(view, opts);
+        token.content = view.fn(app.cache.data);
+      }
+      toc.linkify(token, name, slug, tocOpts);
+      return token;
+    };
+
     file.toc = toc(file.content, opts);
     if (app.hasListeners('toc')) {
       app.emit('toc', file, next);
@@ -59,7 +69,10 @@ function injectToc(app) {
       tocString += opts.toc.footer || '';
     }
 
+    // don't render toc comments in backticks
     str = str.replace(/(?!`)<!-- toc -->(?!`)/g, tocString);
+    // fix escaped code comments (used as macros)
+    str = str.split('<!!--').join('<!--');
     str = str.replace(/\n{2,}/g, '\n\n');
     file.contents = new Buffer(str);
     next(null, file);
@@ -68,6 +81,10 @@ function injectToc(app) {
 
 function createOpts(app, file) {
   var opts = extend({toc: {}}, app.options, file.options);
+  if (typeof opts.toc === 'string') {
+    opts.toc = { method: opts.toc };
+  }
+
   if (typeof opts.toc === 'boolean') {
     opts.toc = { render: opts.toc };
   }
