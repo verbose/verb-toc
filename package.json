@@ -1,6 +1,6 @@
 {
   "name": "verb-toc",
-  "description": "Verb generator that adds middleware for creating and injecting a table of contents into a markdown document.",
+  "description": "Verb plugin that adds middleware for creating and injecting a table of contents into a markdown document.",
   "version": "0.2.3",
   "homepage": "https://github.com/verbose/verb-toc",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "extend-shallow": "^2.0.1",
-    "markdown-toc": "^0.12.11"
+    "markdown-toc": "^0.12.12"
   },
   "devDependencies": {
     "engine-base": "^0.1.2",
@@ -33,6 +33,7 @@
   "keywords": [
     "contents",
     "docs",
+    "documentation",
     "markdown",
     "middleware",
     "plugin",
@@ -64,7 +65,8 @@
     "reflinks": [
       "assemble",
       "markdown-toc",
-      "verb"
+      "verb",
+      "verb-readme-generator"
     ],
     "lint": {
       "reflinks": true
