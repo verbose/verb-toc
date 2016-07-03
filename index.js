@@ -55,11 +55,11 @@ function injectToc(app) {
     var opts = createOpts(app, file);
     var str = file.contents.toString();
 
-    if (opts.method === 'preWrite') {
+    if (opts.toc.method === 'preWrite') {
       file.toc = toc(file.content, opts);
     }
 
-    var tocString = file.toc && file.toc.content ? file.toc.content : '';
+    var tocString = (file.toc && file.toc.content) ? file.toc.content : '';
     var min = opts.toc.minLevels;
 
     // does the TOC have the minimum expected levels to render?

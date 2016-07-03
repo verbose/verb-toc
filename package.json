@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "extend-shallow": "^2.0.1",
-    "markdown-toc": "^0.12.12"
+    "markdown-toc": "^0.12.14"
   },
   "devDependencies": {
     "engine-base": "^0.1.2",
