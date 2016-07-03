@@ -1,7 +1,7 @@
 {
   "name": "verb-toc",
   "description": "Verb plugin that adds middleware for creating and injecting a table of contents into a markdown document.",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "homepage": "https://github.com/verbose/verb-toc",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "verbose/verb-toc",
