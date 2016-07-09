@@ -30,7 +30,7 @@ function createToc(method, app) {
       return;
     }
 
-    opts.linkify = function(token, name, slug, tocOpts) {
+    opts.linkify = opts.linkify || function(token, name, slug, tocOpts) {
       if (/^[{<]%?/.test(name)) {
         var view = app.view('toctemp' + file.extname, {content: name});
         app.compile(view, opts);
