@@ -99,6 +99,8 @@ function createOpts(app, file) {
   if (opts.toc && typeof opts.toc === 'object' && typeof opts.toc.method !== 'string') {
     opts.toc.method = 'postLayout';
   }
+
+  opts = extend({}, opts, opts.toc);
   return opts;
 }
 
