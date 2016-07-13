@@ -68,7 +68,7 @@ function injectToc(app) {
     }
 
     if (tocString === '' || opts.toc.render !== true) {
-      str = str.replace(/^#+ TOC/gm, '');
+      str = str.replace(/^#+ (TOC|table of contents)/gmi, '');
       tocString = '';
     } else {
       tocString += opts.toc.footer || '';

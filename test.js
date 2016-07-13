@@ -59,6 +59,42 @@ describe('verb-toc', function() {
       });
     });
 
+    it('should remove `## TOC` when toc is disabled', function(cb) {
+      app.options.toc = false;
+      app.postRender(/./, toc.injectToc(app));
+      app.data({name: 'Test'});
+
+      app.layout('default', {content: 'abc {% body %} xyz'});
+      var page = app.page('note.md', {
+        content: '\n## TOC <!-- toc -->\n\n## <%= name %>\nThis is foo.\n\n## Bar\n\nThis is bar.',
+        layout: 'default'
+      });
+
+      app.render(page, function(err, res) {
+        if (err) return cb(err);
+        assert.equal(res.content, 'abc \n \n\n## Test\nThis is foo.\n\n## Bar\n\nThis is bar. xyz');
+        cb();
+      });
+    });
+
+    it('should remove `## Table of Contents` when toc is disabled', function(cb) {
+      app.options.toc = false;
+      app.postRender(/./, toc.injectToc(app));
+      app.data({name: 'Test'});
+
+      app.layout('default', {content: 'abc {% body %} xyz'});
+      var page = app.page('note.md', {
+        content: '\n## Table of Contents <!-- toc -->\n\n## <%= name %>\nThis is foo.\n\n## Bar\n\nThis is bar.',
+        layout: 'default'
+      });
+
+      app.render(page, function(err, res) {
+        if (err) return cb(err);
+        assert.equal(res.content, 'abc \n \n\n## Test\nThis is foo.\n\n## Bar\n\nThis is bar. xyz');
+        cb();
+      });
+    });
+
     it('should render templates in headings with a helper', function(cb) {
       app.helper('upper', function(str) {
         return str.toUpperCase();
