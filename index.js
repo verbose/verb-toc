@@ -7,12 +7,14 @@
 
 'use strict';
 
+var isObject = require('isobject');
 var extend = require('extend-shallow');
 var toc = require('markdown-toc');
 
 module.exports = function(app) {
   app.postLayout(/\.md/, createToc('postLayout', app));
   app.postRender(/\.md/, createToc('postRender', app));
+  app.postRender(/\.md/, createToc('preRender', app));
   app.preWrite(/\.md/, injectToc(app));
 };
 
@@ -30,14 +32,14 @@ function createToc(method, app) {
       return;
     }
 
-    opts.linkify = opts.linkify || function(token, name, slug, tocOpts) {
-      if (/^[{<]%?/.test(name)) {
-        var view = app.view('toctemp' + file.extname, {content: name});
+    opts.linkify = opts.linkify || function(tok, name, slug, tocOpts) {
+      if (/^[{<]%?/.test(tok.content)) {
+        var view = app.view('temp' + file.extname, {content: tok.content});
         app.compile(view, opts);
-        token.content = view.fn(app.cache.data);
+        name = tok.content = view.fn(app.cache.data);
       }
-      toc.linkify(token, name, slug, tocOpts);
-      return token;
+      toc.linkify(tok, name, slug, tocOpts);
+      return tok;
     };
 
     file.toc = toc(file.content, opts);
@@ -76,6 +78,7 @@ function injectToc(app) {
 
     // don't render toc comments in backticks
     str = str.replace(/(?!`)<!-- toc -->(?!`)/g, tocString);
+
     // fix escaped code comments (used as macros)
     str = str.split('<!!--').join('<!--');
     str = str.replace(/\n{2,}/g, '\n\n');
@@ -87,16 +90,24 @@ function injectToc(app) {
 function createOpts(app, file) {
   var opts = extend({toc: {}}, app.options, file.options, file.data);
   if (typeof opts.toc === 'string') {
-    opts.toc = { method: opts.toc };
+    if (opts.toc === 'collapsible') {
+      opts.toc = { method: 'postLayout', collapsible: true };
+    } else {
+      opts.toc = { method: opts.toc };
+    }
   }
 
   if (typeof opts.toc === 'boolean') {
     opts.toc = { render: opts.toc };
   }
+
+  if (!isObject(opts.toc)) {
+    opts.toc = {};
+  }
+
   if (typeof opts.toc.method === 'string' || opts.toc.match || typeof opts.toc.minLevels === 'number') {
     opts.toc.render = true;
-  }
-  if (opts.toc && typeof opts.toc === 'object' && typeof opts.toc.method !== 'string') {
+  } else {
     opts.toc.method = 'postLayout';
   }
 
@@ -109,7 +120,7 @@ function hasMinimumLevels(str, min) {
   var len = lines.length;
   var max = 0;
   while (len--) {
-    var line = lines[len]
+    var line = lines[len];
     var ws = /^\s+/.exec(line);
     if (!ws) continue;
     var wlen = ws[0].length;
