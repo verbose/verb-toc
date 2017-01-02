@@ -22,13 +22,14 @@
   },
   "dependencies": {
     "extend-shallow": "^2.0.1",
-    "markdown-toc": "^1.0.2"
+    "isobject": "^3.0.0",
+    "markdown-toc": "^1.0.3"
   },
   "devDependencies": {
     "engine-base": "^0.1.2",
     "gulp-format-md": "^0.1.11",
     "mocha": "^3.2.0",
-    "templates": "^1.0.0"
+    "templates": "^0.25.3"
   },
   "keywords": [
     "contents",
